@@ -1,11 +1,11 @@
 @extends('template.base')
 
-@section('title', 'Portada - Banditore')
+@section('title', 'Portada - NewsPoint')
 
 @section('hero')
 <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
     <div class="col-lg-8 px-0">
-        <h1 class="display-4 fst-italic">Banditore</h1>
+        <h1 class="display-4 fst-italic">NewsPoint</h1>
         <p class="lead my-3">
             Tu espacio para publicar noticias y compartir opiniones.
         </p>
@@ -100,9 +100,9 @@
     <div class="col-md-4">
 
         <div class="blog-sidebar">
-            <h4>Sobre Banditore</h4>
+            <h4>Sobre NewsPoint</h4>
             <p>
-                Banditore es una aplicación para publicar noticias y permitir
+                NewsPoint es una aplicación para publicar noticias y permitir
                 que los usuarios compartan sus opiniones mediante comentarios.
             </p>
         </div>
