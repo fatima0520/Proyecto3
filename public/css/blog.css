@@ -1,0 +1,209 @@
+/* =====================================================
+   ESTILOS GENERALES
+   ===================================================== */
+
+:root {
+    --color-principal: #343a40;
+    --color-secundario: #6c757d;
+    --color-fondo: #f8f9fa;
+    --color-borde: #dee2e6;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: #212529;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* =====================================================
+   CABECERA
+   ===================================================== */
+
+.blog-header {
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.blog-header-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #212529;
+    text-decoration: none;
+}
+
+.blog-header-logo:hover {
+    color: var(--color-secundario);
+}
+
+/* =====================================================
+   NAVEGACIÓN
+   ===================================================== */
+
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.nav-scroller .nav-link {
+    color: var(--color-secundario);
+    padding: .5rem 1rem;
+    text-decoration: none;
+}
+
+.nav-scroller .nav-link:hover {
+    color: #212529;
+}
+
+/* =====================================================
+   TÍTULOS Y TEXTOS
+   ===================================================== */
+
+h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif;
+}
+
+.display-4 {
+    font-size: 2.5rem;
+}
+
+/* =====================================================
+   CONTENIDO PRINCIPAL
+   ===================================================== */
+
+.blog-post {
+    margin-bottom: 2rem;
+}
+
+.blog-post-title {
+    font-size: 2rem;
+    margin-bottom: .25rem;
+}
+
+.blog-post-meta {
+    margin-bottom: 1.25rem;
+    color: var(--color-secundario);
+}
+
+/* =====================================================
+   TARJETAS DE NOTICIAS
+   ===================================================== */
+
+.card {
+    border: 1px solid var(--color-borde);
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+}
+
+.card-text {
+    color: #495057;
+}
+
+/* =====================================================
+   BARRA LATERAL
+   ===================================================== */
+
+.blog-sidebar {
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 1px solid var(--color-borde);
+    border-radius: .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.blog-sidebar h4 {
+    margin-bottom: 1rem;
+}
+
+/* =====================================================
+   COMENTARIOS
+   ===================================================== */
+
+.comentario {
+    background-color: #fff;
+    border: 1px solid var(--color-borde);
+    border-radius: .5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comentario-positivo {
+    border-left: 4px solid #198754;
+}
+
+.comentario-negativo {
+    border-left: 4px solid #dc3545;
+}
+
+/* =====================================================
+   BOTONES Y ENLACES
+   ===================================================== */
+
+.btn {
+    border-radius: .25rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* =====================================================
+   PIE DE PÁGINA
+   ===================================================== */
+
+.blog-footer {
+    padding: 2.5rem 0;
+    color: var(--color-secundario);
+    text-align: center;
+    border-top: 1px solid var(--color-borde);
+    margin-top: 3rem;
+}
+
+/* =====================================================
+   FORMULARIOS
+   ===================================================== */
+
+.form-label {
+    font-weight: 600;
+}
+
+textarea {
+    min-height: 150px;
+}
+
+/* =====================================================
+   DISEÑO RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+    .blog-header-logo {
+        font-size: 1.75rem;
+    }
+
+    .display-4 {
+        font-size: 2rem;
+    }
+
+    .blog-post-title {
+        font-size: 1.5rem;
+    }
+}
+
