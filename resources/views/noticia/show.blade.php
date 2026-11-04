@@ -1,6 +1,6 @@
 @extends('template.base')
 
-@section('title', $noticia->titulo . ' - NewsPoint')
+@section('title', $noticia->titulo . ' - InfoNova')
 
 @section('content')
 <div class="container my-5">

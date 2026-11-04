@@ -1,11 +1,11 @@
 @extends('template.base')
 
-@section('title', 'Portada - NewsPoint')
+@section('title', 'Portada - InfoNova')
 
 @section('hero')
 <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
     <div class="col-lg-8 px-0">
-        <h1 class="display-4 fst-italic">NewsPoint</h1>
+        <h1 class="display-4 fst-italic">InfoNova</h1>
         <p class="lead my-3">
             Tu espacio para publicar noticias y compartir opiniones.
         </p>
@@ -100,9 +100,9 @@
     <div class="col-md-4">
 
         <div class="blog-sidebar">
-            <h4>Sobre NewsPoint</h4>
+            <h4>Sobre InfoNova</h4>
             <p>
-                NewsPoint es una aplicación para publicar noticias y permitir
+                InfoNova es una aplicación para publicar noticias y permitir
                 que los usuarios compartan sus opiniones mediante comentarios.
             </p>
         </div>
