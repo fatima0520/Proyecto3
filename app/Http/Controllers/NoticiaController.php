@@ -70,9 +70,7 @@ class NoticiaController extends Controller
 
         // Comprobar si hay errores de validación
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withInput()->withErrors($validator);
         }
 
         // Comprobar si se ha subido un archivo
@@ -87,10 +85,16 @@ class NoticiaController extends Controller
         }
 
         // Crear y guardar la noticia
-        Noticia::create([
-            'titulo' => $request->input('titulo'),
-            'texto' => $texto,
-        ]);
+        try {
+            Noticia::create([
+                'titulo' => $request->input('titulo'),
+                'texto' => $texto,
+            ]);
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors([
+                'error' => 'Error al crear la noticia.',
+            ]);
+        }
 
         // Volver al listado con un mensaje de éxito
         return redirect()->route('noticia.index')
@@ -129,51 +133,55 @@ class NoticiaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, string $id): RedirectResponse
+     public function update(Request $request, string $id): RedirectResponse
     {
-    // Buscar la noticia
-    $noticia = Noticia::findOrFail($id);
+        // Buscar la noticia
+        $noticia = Noticia::findOrFail($id);
 
-    // Comprobar si todavía se puede editar
-    if (!$noticia->sePuedeEditar()) {
-        return redirect()->route('noticia.index')
-            ->with('error', 'Han pasado los 20 minutos. Ya no puedes editar esta noticia.');
-    }
+        // Comprobar si todavía se puede editar
+        if (!$noticia->sePuedeEditar()) {
+            return redirect()->route('noticia.index')
+                ->with('error', 'Han pasado los 20 minutos. Ya no puedes editar esta noticia.');
+        }
 
-    // Validar los datos recibidos
-    $validator = Validator::make(
-        $request->all(),
-        self::RULES,
-        self::MESSAGES
-    );
-
-    // Comprobar si hay errores de validación
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
-    }
-
-    // Comprobar si se ha subido un archivo
-    if ($request->hasFile('archivo_md')) {
-        // Leer el contenido del archivo
-        $texto = file_get_contents(
-            $request->file('archivo_md')->getRealPath()
+        // Validar los datos recibidos
+        $validator = Validator::make(
+            $request->all(),
+            self::RULES,
+            self::MESSAGES
         );
-    } else {
-        // Utilizar el texto escrito en el formulario
-        $texto = $request->input('texto');
-    }
 
-    // Actualizar los datos de la noticia
-    $noticia->update([
-        'titulo' => $request->input('titulo'),
-        'texto' => $texto,
-    ]);
+        // Comprobar si hay errores de validación
+        if ($validator->fails()) {
+            return back()->withInput()->withErrors($validator);
+        }
 
-    // Volver al listado con un mensaje
-    return redirect()->route('noticia.index')
-        ->with('success', 'La noticia se ha actualizado correctamente.');
+        // Comprobar si se ha subido un archivo
+        if ($request->hasFile('archivo_md')) {
+            // Leer el contenido del archivo
+            $texto = file_get_contents(
+                $request->file('archivo_md')->getRealPath()
+            );
+        } else {
+            // Utilizar el texto escrito en el formulario
+            $texto = $request->input('texto');
+        }
+
+        // Actualizar los datos de la noticia
+        try {
+            $noticia->update([
+                'titulo' => $request->input('titulo'),
+                'texto' => $texto,
+            ]);
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors([
+                'error' => 'Error al editar la noticia.',
+            ]);
+        }
+
+        // Volver al listado con un mensaje
+        return redirect()->route('noticia.index')
+            ->with('success', 'La noticia se ha actualizado correctamente.');
     }
 
     /**
@@ -181,20 +189,26 @@ class NoticiaController extends Controller
      */
     public function destroy(string $id): RedirectResponse
     {
-    // Buscar la noticia
-    $noticia = Noticia::findOrFail($id);
+        // Buscar la noticia
+        $noticia = Noticia::findOrFail($id);
 
-    // Comprobar si se puede borrar
-    if (!$noticia->sePuedeBorrar()) {
+        // Comprobar si se puede borrar
+        if (!$noticia->sePuedeBorrar()) {
+            return redirect()->route('noticia.index')
+                ->with('error', 'No puedes eliminar esta noticia porque tiene comentarios.');
+        }
+
+        // Eliminar la noticia
+        try {
+            $noticia->delete();
+        } catch (Exception $e) {
+            return back()->withErrors([
+                'error' => 'Error al eliminar la noticia.',
+            ]);
+        }
+
+        // Volver al listado con un mensaje
         return redirect()->route('noticia.index')
-            ->with('error', 'No puedes eliminar esta noticia porque tiene comentarios.');
-    }
-
-    // Eliminar la noticia
-    $noticia->delete();
-
-    // Volver al listado con un mensaje
-    return redirect()->route('noticia.index')
-        ->with('success', 'La noticia se ha eliminado correctamente.');
+            ->with('success', 'La noticia se ha eliminado correctamente.');
     }
 }

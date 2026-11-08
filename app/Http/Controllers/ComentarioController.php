@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Exception;
 
 class ComentarioController extends Controller
 {
@@ -31,28 +32,34 @@ class ComentarioController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validar los datos recibidos
+        // 1. Validar los datos recibidos
         $validator = Validator::make(
             $request->all(),
             self::RULES,
             self::MESSAGES
         );
 
-        // Comprobar si hay errores de validación
+        // 2. Comprobar si hay errores de validación
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        // Crear y guardar el comentario
-        Comentario::create([
-            'noticia_id' => $request->input('noticia_id'),
-            'mensaje' => $request->input('mensaje'),
-            'valoracion' => $request->input('valoracion'),
-        ]);
+        // 3. Crear y guardar el comentario
+        try {
+            Comentario::create([
+                'noticia_id' => $request->input('noticia_id'),
+                'mensaje' => $request->input('mensaje'),
+                'valoracion' => $request->input('valoracion'),
+            ]);
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors([
+                'error' => 'Error al crear el comentario.',
+            ]);
+        }
 
-        // Volver a la noticia con un mensaje de éxito
+        // 4. Volver a la noticia con un mensaje de éxito
         return redirect()->route(
             'noticia.show',
             $request->input('noticia_id')
@@ -81,6 +88,7 @@ class ComentarioController extends Controller
      */
     public function update(Request $request, string $id): RedirectResponse
     {
+        // Buscar el comentario
         $comentario = Comentario::findOrFail($id);
 
         // Comprobar que todavía se puede modificar
@@ -100,16 +108,21 @@ class ComentarioController extends Controller
             self::MESSAGES
         );
 
+        // Comprobar si hay errores de validación
         if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withInput()->withErrors($validator);
         }
 
         // Guardar los cambios
-        $comentario->update($validator->validated());
+        try {
+            $comentario->update($validator->validated());
+        } catch (Exception $e) {
+            return back()->withInput()->withErrors([
+                'error' => 'Error al editar el comentario.',
+            ]);
+        }
 
+        // Volver a la noticia con un mensaje de éxito
         return redirect()
             ->route('noticia.show', $comentario->noticia_id)
             ->with('success', 'Comentario actualizado correctamente.');
@@ -126,18 +139,26 @@ class ComentarioController extends Controller
 
         // Comprobar si todavía se puede eliminar
         if (!$comentario->sePuedeModificarOBorrar()) {
-            return redirect()->route('noticia.show', $comentario->noticia_id)
+            return redirect()
+                ->route('noticia.show', $comentario->noticia_id)
                 ->with('error', 'Han pasado los 5 minutos. Ya no puedes eliminar este comentario.');
         }
 
-        // Guardar el identificador de la noticia
+        // Guardar el identificador de la noticia antes de eliminar
         $noticiaId = $comentario->noticia_id;
 
         // Eliminar el comentario
-        $comentario->delete();
+        try {
+            $comentario->delete();
+        } catch (Exception $e) {
+            return redirect()
+                ->route('noticia.show', $noticiaId)
+                ->with('error', 'Error al eliminar el comentario.');
+        }
 
-        // Volver a la noticia con un mensaje
-        return redirect()->route('noticia.show', $noticiaId)
+        // Volver a la noticia con un mensaje de éxito
+        return redirect()
+            ->route('noticia.show', $noticiaId)
             ->with('success', 'El comentario se ha eliminado correctamente.');
     }
 }
